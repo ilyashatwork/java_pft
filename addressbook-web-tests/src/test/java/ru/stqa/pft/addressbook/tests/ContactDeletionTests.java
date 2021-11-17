@@ -13,20 +13,40 @@ public class ContactDeletionTests {
     public void setUp() {
         wd = new ChromeDriver();
         wd.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        login();
     }
 
-    @Test
-    public void testContactDeletion() {
+    public void login() {
         wd.get("http://localhost/addressbook/");
         wd.findElement(By.name("user")).clear();
         wd.findElement(By.name("user")).sendKeys("admin");
         wd.findElement(By.name("pass")).clear();
         wd.findElement(By.name("pass")).sendKeys("secret");
         wd.findElement(By.xpath("//input[@value='Login']")).click();
-        wd.findElement(By.name("selected[]")).click();
-        wd.findElement(By.xpath("//input[@value='Delete']")).click();
-        wd.switchTo().alert().accept();
+    }
+
+    @Test
+    public void testContactDeletion() {
+        selectContact();
+        deleteSelectedContact();
+        acceptAllert();
+        goToHomePage();
+    }
+
+    private void goToHomePage() {
         wd.findElement(By.linkText("home")).click();
+    }
+
+    private void acceptAllert() {
+        wd.switchTo().alert().accept();
+    }
+
+    private void deleteSelectedContact() {
+        wd.findElement(By.xpath("//input[@value='Delete']")).click();
+    }
+
+    private void selectContact() {
+        wd.findElement(By.name("selected[]")).click();
     }
 
     @AfterMethod(alwaysRun = true)

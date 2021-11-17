@@ -13,25 +13,45 @@ public class ContactModificationTests {
     public void setUp() {
         wd = new ChromeDriver();
         wd.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        login();
     }
 
-    @Test
-    public void testContactModification() {
+    public void login() {
         wd.get("http://localhost/addressbook/");
         wd.findElement(By.name("user")).clear();
         wd.findElement(By.name("user")).sendKeys("admin");
         wd.findElement(By.name("pass")).clear();
         wd.findElement(By.name("pass")).sendKeys("secret");
         wd.findElement(By.xpath("//input[@value='Login']")).click();
-        wd.findElement(By.xpath("//td[8]/a")).click();
+    }
+
+    @Test
+    public void testContactModification() {
+        editContact();
+        fillContactForm();
+        updateContact();
+        goToHomePageLink();
+    }
+
+    private void goToHomePageLink() {
+        wd.findElement(By.linkText("home page")).click();
+    }
+
+    private void updateContact() {
+        wd.findElement(By.name("update")).click();
+    }
+
+    private void fillContactForm() {
         wd.findElement(By.name("firstname")).clear();
         wd.findElement(By.name("firstname")).sendKeys("Ivan");
         wd.findElement(By.name("lastname")).clear();
         wd.findElement(By.name("lastname")).sendKeys("Ivanov");
         wd.findElement(By.name("mobile")).clear();
         wd.findElement(By.name("mobile")).sendKeys("89053807510");
-        wd.findElement(By.name("update")).click();
-        wd.findElement(By.linkText("home page")).click();
+    }
+
+    private void editContact() {
+        wd.findElement(By.xpath("//td[8]/a")).click();
     }
 
     @AfterMethod(alwaysRun = true)
