@@ -7,31 +7,31 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 public class ContactDeletionTests {
-    private WebDriver driver;
+    public WebDriver wd;
 
     @BeforeMethod(alwaysRun = true)
     public void setUp() {
-        driver = new ChromeDriver();
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        wd = new ChromeDriver();
+        wd.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
     }
 
     @Test
     public void testContactDeletion() {
-        driver.get("http://localhost/addressbook/");
-        driver.findElement(By.name("user")).clear();
-        driver.findElement(By.name("user")).sendKeys("admin");
-        driver.findElement(By.name("pass")).clear();
-        driver.findElement(By.name("pass")).sendKeys("secret");
-        driver.findElement(By.xpath("//input[@value='Login']")).click();
-        driver.findElement(By.name("selected[]")).click();
-        driver.findElement(By.xpath("//input[@value='Delete']")).click();
-        driver.switchTo().alert().accept();
-        driver.findElement(By.linkText("home")).click();
+        wd.get("http://localhost/addressbook/");
+        wd.findElement(By.name("user")).clear();
+        wd.findElement(By.name("user")).sendKeys("admin");
+        wd.findElement(By.name("pass")).clear();
+        wd.findElement(By.name("pass")).sendKeys("secret");
+        wd.findElement(By.xpath("//input[@value='Login']")).click();
+        wd.findElement(By.name("selected[]")).click();
+        wd.findElement(By.xpath("//input[@value='Delete']")).click();
+        wd.switchTo().alert().accept();
+        wd.findElement(By.linkText("home")).click();
     }
 
     @AfterMethod(alwaysRun = true)
     public void tearDown() {
-        driver.quit();
+        wd.quit();
     }
 
 }
