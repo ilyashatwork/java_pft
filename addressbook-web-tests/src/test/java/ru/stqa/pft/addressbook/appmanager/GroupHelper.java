@@ -10,7 +10,7 @@ public class GroupHelper extends HelperBase {
         super(wd);
     }
 
-    public void initGroupCreation() {
+    public void startGroupCreation() {
         click(By.name("new"));
     }
 
@@ -32,4 +32,11 @@ public class GroupHelper extends HelperBase {
         click(By.xpath("//input[5]"));
     }
 
+    public void startGroupModification() {
+        click(By.name("edit"));
+    }
+
+    public void submitGroupModification() {
+        click(By.name("update"));
+    }
 }
