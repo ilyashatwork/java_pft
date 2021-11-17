@@ -12,7 +12,7 @@ public class ApplicationManager {
 
     public void start() {
         wd = new ChromeDriver();
-        wd.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+        wd.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         wd.get("http://localhost/addressbook/");
         gh = new GroupHelper(wd);
         nh = new NavigationHelper(wd);

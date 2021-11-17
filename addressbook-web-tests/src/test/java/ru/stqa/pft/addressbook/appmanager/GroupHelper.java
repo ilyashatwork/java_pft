@@ -28,7 +28,7 @@ public class GroupHelper extends HelperBase {
         click(By.name("selected[]"));
     }
 
-    public void deleteSelectedGroups() {
+    public void deleteSelectedGroup() {
         click(By.xpath("//input[5]"));
     }
 
