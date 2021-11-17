@@ -13,44 +13,44 @@ public class ContactCreationTests {
     public void setUp() {
         wd = new ChromeDriver();
         wd.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        login();
+        login("admin", "secret");
     }
 
-    public void login() {
+    public void login(String username, String password) {
         wd.get("http://localhost/addressbook/");
         wd.findElement(By.name("user")).clear();
-        wd.findElement(By.name("user")).sendKeys("admin");
+        wd.findElement(By.name("user")).sendKeys(username);
         wd.findElement(By.name("pass")).clear();
-        wd.findElement(By.name("pass")).sendKeys("secret");
+        wd.findElement(By.name("pass")).sendKeys(password);
         wd.findElement(By.xpath("//input[@value='Login']")).click();
     }
 
     @Test
     public void testContactCreation() {
         goToAddNewPage();
-        fillContactForm();
+        fillContactForm(new ContactData("Ilya", "Shatskiy", "89063000199"));
         submitContactCreation();
         goToHomePageLink();
     }
 
-    private void goToHomePageLink() {
+    public void goToHomePageLink() {
         wd.findElement(By.linkText("home page")).click();
     }
 
-    private void submitContactCreation() {
+    public void submitContactCreation() {
         wd.findElement(By.name("submit")).click();
     }
 
-    private void fillContactForm() {
+    public void fillContactForm(ContactData contactData) {
         wd.findElement(By.name("firstname")).clear();
-        wd.findElement(By.name("firstname")).sendKeys("Ilya");
+        wd.findElement(By.name("firstname")).sendKeys(contactData.firstName());
         wd.findElement(By.name("lastname")).clear();
-        wd.findElement(By.name("lastname")).sendKeys("Shatskiy");
+        wd.findElement(By.name("lastname")).sendKeys(contactData.lastName());
         wd.findElement(By.name("mobile")).clear();
-        wd.findElement(By.name("mobile")).sendKeys("89063000199");
+        wd.findElement(By.name("mobile")).sendKeys(contactData.mobile());
     }
 
-    private void goToAddNewPage() {
+    public void goToAddNewPage() {
         wd.findElement(By.linkText("add new")).click();
     }
 

@@ -13,15 +13,15 @@ public class ContactDeletionTests {
     public void setUp() {
         wd = new ChromeDriver();
         wd.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        login();
+        login("admin", "secret");
     }
 
-    public void login() {
+    public void login(String username, String password) {
         wd.get("http://localhost/addressbook/");
         wd.findElement(By.name("user")).clear();
-        wd.findElement(By.name("user")).sendKeys("admin");
+        wd.findElement(By.name("user")).sendKeys(username);
         wd.findElement(By.name("pass")).clear();
-        wd.findElement(By.name("pass")).sendKeys("secret");
+        wd.findElement(By.name("pass")).sendKeys(password);
         wd.findElement(By.xpath("//input[@value='Login']")).click();
     }
 
@@ -33,19 +33,19 @@ public class ContactDeletionTests {
         goToHomePage();
     }
 
-    private void goToHomePage() {
+    public void goToHomePage() {
         wd.findElement(By.linkText("home")).click();
     }
 
-    private void acceptAllert() {
+    public void acceptAllert() {
         wd.switchTo().alert().accept();
     }
 
-    private void deleteSelectedContact() {
+    public void deleteSelectedContact() {
         wd.findElement(By.xpath("//input[@value='Delete']")).click();
     }
 
-    private void selectContact() {
+    public void selectContact() {
         wd.findElement(By.name("selected[]")).click();
     }
 

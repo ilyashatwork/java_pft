@@ -13,44 +13,44 @@ public class ContactModificationTests {
     public void setUp() {
         wd = new ChromeDriver();
         wd.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        login();
+        login("admin", "secret");
     }
 
-    public void login() {
+    public void login(String username, String password) {
         wd.get("http://localhost/addressbook/");
         wd.findElement(By.name("user")).clear();
-        wd.findElement(By.name("user")).sendKeys("admin");
+        wd.findElement(By.name("user")).sendKeys(username);
         wd.findElement(By.name("pass")).clear();
-        wd.findElement(By.name("pass")).sendKeys("secret");
+        wd.findElement(By.name("pass")).sendKeys(password);
         wd.findElement(By.xpath("//input[@value='Login']")).click();
     }
 
     @Test
     public void testContactModification() {
         editContact();
-        fillContactForm();
+        fillContactForm(new ContactData("Ivan", "Ivanov", "89053807510"));
         updateContact();
         goToHomePageLink();
     }
 
-    private void goToHomePageLink() {
+    public void goToHomePageLink() {
         wd.findElement(By.linkText("home page")).click();
     }
 
-    private void updateContact() {
+    public void updateContact() {
         wd.findElement(By.name("update")).click();
     }
 
-    private void fillContactForm() {
+    public void fillContactForm(ContactData contactData) {
         wd.findElement(By.name("firstname")).clear();
-        wd.findElement(By.name("firstname")).sendKeys("Ivan");
+        wd.findElement(By.name("firstname")).sendKeys(contactData.firstName());
         wd.findElement(By.name("lastname")).clear();
-        wd.findElement(By.name("lastname")).sendKeys("Ivanov");
+        wd.findElement(By.name("lastname")).sendKeys(contactData.lastName());
         wd.findElement(By.name("mobile")).clear();
-        wd.findElement(By.name("mobile")).sendKeys("89053807510");
+        wd.findElement(By.name("mobile")).sendKeys(contactData.mobile());
     }
 
-    private void editContact() {
+    public void editContact() {
         wd.findElement(By.xpath("//td[8]/a")).click();
     }
 
