@@ -3,7 +3,6 @@ package ru.stqa.pft.addressbook.appmanager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.BrowserType;
 
 import java.util.concurrent.TimeUnit;
@@ -21,14 +20,13 @@ public class ApplicationManager {
     }
 
     public void start() {
-        if (browser == BrowserType.CHROME) {
-            wd = new ChromeDriver();
-        }
-        else if (browser == BrowserType.FIREFOX) {
-            wd = new FirefoxDriver();
-        }
-        else if (browser == BrowserType.IE) {
-            wd = new InternetExplorerDriver();
+        switch (browser) {
+            case BrowserType.CHROME:
+                wd = new ChromeDriver();
+                break;
+            case BrowserType.FIREFOX:
+                wd = new FirefoxDriver();
+                break;
         }
         wd.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         wd.get("http://localhost/addressbook/");
