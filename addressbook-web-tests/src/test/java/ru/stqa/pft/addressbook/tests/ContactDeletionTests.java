@@ -6,7 +6,7 @@ import org.testng.annotations.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-public class ContactDeletionTests {
+public class ContactDeletionTests extends TestBase {
     public WebDriver wd;
 
     @BeforeMethod(alwaysRun = true)
