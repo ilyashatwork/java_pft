@@ -24,7 +24,7 @@ public class ApplicationManager {
             case BrowserType.CHROME -> wd = new ChromeDriver();
             case BrowserType.FIREFOX -> wd = new FirefoxDriver();
         }
-        wd.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+        wd.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
         wd.get("http://localhost/addressbook/");
 
         gh = new GroupHelper(wd);
