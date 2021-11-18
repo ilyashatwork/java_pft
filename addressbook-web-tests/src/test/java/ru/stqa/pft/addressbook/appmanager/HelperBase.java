@@ -18,4 +18,9 @@ public class HelperBase {
         wd.findElement(locator).clear();
         wd.findElement(locator).sendKeys(text);
     }
+
+    public void accept() {
+        wd.switchTo().alert().accept();
+    }
+
 }
