@@ -72,44 +72,47 @@ public class GroupHelper extends BaseHelper {
 
     public void groupCreationProcess(GroupData groupData) {
         navigationHelper.goToGroupPage();
-        List<GroupData> groupCountBefore = groupGetList();
+        List<GroupData> groupsBefore = groupGetList();
 
         groupNewGroupButton();
         groupEditFields(groupData);
         groupEnterInformationButton();
 
         navigationHelper.goToGroupPage();
-        List<GroupData> groupCountAfter = groupGetList();
+        List<GroupData> groupsAfter = groupGetList();
 
-        Assert.assertEquals(groupCountAfter.size(), groupCountBefore.size() + 1);
+        Assert.assertEquals(groupsAfter.size(), groupsBefore.size() + 1);
     }
 
     public void groupModificationProcess(GroupData groupData) {
         navigationHelper.goToGroupPage();
-        List<GroupData> groupCountBefore = groupGetList();
+        List<GroupData> groupsBefore = groupGetList();
 
-        groupCheckBox(groupCountBefore.size() - 1);
+        groupCheckBox(groupsBefore.size() - 1);
         groupEditGroupButton();
         groupEditFields(groupData);
         groupUpdateButton();
 
         navigationHelper.goToGroupPage();
-        List<GroupData> groupCountAfter = groupGetList();
+        List<GroupData> groupsAfter = groupGetList();
 
-        Assert.assertEquals(groupCountAfter.size(), groupCountBefore.size());
+        Assert.assertEquals(groupsAfter.size(), groupsBefore.size());
     }
 
     public void groupDeletionProcess() {
         navigationHelper.goToGroupPage();
-        List<GroupData> groupCountBefore = groupGetList();
+        List<GroupData> groupsBefore = groupGetList();
 
-        groupCheckBox(groupCountBefore.size() - 1);
+        groupCheckBox(groupsBefore.size() - 1);
         groupDeleteButton();
 
         navigationHelper.goToGroupPage();
-        List<GroupData> groupCountAfter = groupGetList();
+        List<GroupData> groupsAfter = groupGetList();
 
-        Assert.assertEquals(groupCountAfter.size(), groupCountBefore.size() - 1);
+        Assert.assertEquals(groupsAfter.size(), groupsBefore.size() - 1);
+
+        groupsBefore.remove(groupsBefore.size() - 1);
+        Assert.assertEquals(groupsBefore, groupsAfter);
     }
 
 }
