@@ -57,27 +57,41 @@ public class ContactHelper extends BaseHelper {
         return elementPresentIs(By.name("selected[]"));
     }
 
+    public int contactGetCount() {
+        return webDriver.findElements(By.name("selected[]")).size();
+    }
+
     public void contactCreationProcess(ContactData contactData) {
+        navigationHelper.goToHomePage();
+        int contactCountBefore = contactGetCount();
         navigationHelper.goToAddNewPage();
         contactEditFields(contactData, true);
         contactEnterButton();
         navigationHelper.goToHomePage();
+        int contactCountAfter = contactGetCount();
+        Assert.assertEquals(contactCountAfter, contactCountBefore + 1);
     }
 
     public void contactModificationProcess(ContactData contactData) {
         navigationHelper.goToHomePage();
+        int contactCountBefore = contactGetCount();
         contactEditImageLink();
         contactEditFields(contactData, false);
         contactUpdateButton();
         navigationHelper.goToHomePage();
+        int contactCountAfter = contactGetCount();
+        Assert.assertEquals(contactCountAfter, contactCountBefore);
     }
 
     public void contactDeletionProcess() {
         navigationHelper.goToHomePage();
+        int contactCountBefore = contactGetCount();
         contactCheckBox();
         contactDeleteButton();
         alertAccept();
         navigationHelper.goToHomePage();
+        int contactCountAfter = contactGetCount();
+        Assert.assertEquals(contactCountAfter, contactCountBefore - 1);
     }
 
 }

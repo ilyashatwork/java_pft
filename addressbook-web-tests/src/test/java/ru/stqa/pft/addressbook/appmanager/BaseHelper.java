@@ -18,7 +18,7 @@ public class BaseHelper {
     public void print(By locator, String text) {
         if (text != null) {
             String existingText = webDriver.findElement(locator).getAttribute("value");
-            if (! text.equals(existingText)) {
+            if (!text.equals(existingText)) {
                 webDriver.findElement(locator).clear();
                 webDriver.findElement(locator).sendKeys(text);
             }
@@ -33,8 +33,7 @@ public class BaseHelper {
         try {
             webDriver.findElement(locator);
             return true;
-        }
-        catch (NoSuchElementException ex) {
+        } catch (NoSuchElementException ex) {
             return false;
         }
     }

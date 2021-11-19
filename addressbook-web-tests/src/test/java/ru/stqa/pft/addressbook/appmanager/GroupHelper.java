@@ -2,6 +2,7 @@ package ru.stqa.pft.addressbook.appmanager;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.testng.Assert;
 
 import ru.stqa.pft.addressbook.model.GroupData;
 
@@ -54,28 +55,41 @@ public class GroupHelper extends BaseHelper {
         return elementPresentIs(By.name("selected[]"));
     }
 
+    public int groupGetCount() {;
+        return webDriver.findElements(By.name("selected[]")).size();
+    }
+
     public void groupCreationProcess(GroupData groupData) {
         navigationHelper.goToGroupPage();
+        int groupCountBefore = groupGetCount();
         groupNewGroupButton();
         groupEditFields(groupData);
         groupEnterInformationButton();
         navigationHelper.goToGroupPage();
+        int groupCountAfter = groupGetCount();
+        Assert.assertEquals(groupCountAfter, groupCountBefore + 1);
     }
 
     public void groupModificationProcess(GroupData groupData) {
         navigationHelper.goToGroupPage();
+        int groupCountBefore = groupGetCount();
         groupCheckBox();
         groupEditGroupButton();
         groupEditFields(groupData);
         groupUpdateButton();
         navigationHelper.goToGroupPage();
+        int groupCountAfter = groupGetCount();
+        Assert.assertEquals(groupCountAfter, groupCountBefore);
     }
 
     public void groupDeletionProcess() {
         navigationHelper.goToGroupPage();
+        int groupCountBefore = groupGetCount();
         groupCheckBox();
         groupDeleteButton();
         navigationHelper.goToGroupPage();
+        int groupCountAfter = groupGetCount();
+        Assert.assertEquals(groupCountAfter, groupCountBefore - 1);
     }
 
 }
