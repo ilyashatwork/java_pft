@@ -4,16 +4,12 @@ import org.testng.annotations.Test;
 
 import ru.stqa.pft.addressbook.model.GroupData;
 
-public class GroupModificationTests extends TestBase {
+public class GroupModificationTests extends BaseTests {
 
     @Test
     public void testGroupModification() {
-        app.getNh().goToGroupPage();
-        app.getGh().selectGroup();
-        app.getGh().startGroupModification();
-        app.getGh().fillGroupForm(new GroupData("test1", "test2", "test3"));
-        app.getGh().submitGroupModification();
-        app.getNh().goToGroupPage();
+        applicationManager.getGroupHelper().groupCreationCheck(new GroupData("Test group name #1", "Test group header #1", "Test group footer #1"));
+        applicationManager.getGroupHelper().groupModificationProcess(new GroupData("Test group name #2", "Test group header #2", "Test group footer #2"));
     }
 
 }

@@ -7,46 +7,77 @@ import org.testng.Assert;
 
 import ru.stqa.pft.addressbook.model.ContactData;
 
-public class ContactHelper extends HelperBase {
+public class ContactHelper extends BaseHelper {
 
-    public ContactHelper(WebDriver wd) {
-        super(wd);
+    public ContactHelper(WebDriver webDriver) {
+        super(webDriver);
     }
 
-    public void fillContactForm(ContactData contactData, boolean creation) {
-        type(By.name("firstname"), contactData.firstName());
-        type(By.name("lastname"), contactData.lastName());
-        type(By.name("mobile"), contactData.mobile());
-        if (creation) {
-            new Select(wd.findElement(By.name("new_group"))).selectByVisibleText(contactData.group());
-        }
-        else {
-            Assert.assertFalse(isElementPresent(By.name("new_group")));
-        }
-    }
+    NavigationHelper navigationHelper = new NavigationHelper(webDriver);
 
-    public void submitContactCreation() {
+    public void contactEnterButton() {
         click(By.name("submit"));
     }
 
-    public void selectContact() {
+    public void contactCheckBox() {
         click(By.name("selected[]"));
     }
 
-    public void deleteSelectedContact() {
-        click(By.xpath("//input[@value='Delete']"));
-    }
-
-    public void acceptAllert() {
-        accept();
-    }
-
-    public void editContact() {
+    public void contactEditImageLink() {
         click(By.xpath("//td[8]/a"));
     }
 
-    public void updateContact() {
+    public void contactUpdateButton() {
         click(By.name("update"));
+    }
+
+    public void contactDeleteButton() {
+        click(By.xpath("//input[@value='Delete']"));
+    }
+
+    public void contactEditFields(ContactData contactData, boolean creationIs) {
+        print(By.name("firstname"), contactData.firstName());
+        print(By.name("lastname"), contactData.lastName());
+        print(By.name("mobile"), contactData.mobile());
+        if (creationIs) {
+            new Select(webDriver.findElement(By.name("new_group"))).selectByVisibleText(contactData.group());
+        } else {
+            Assert.assertFalse(elementPresentIs(By.name("new_group")));
+        }
+    }
+
+    public void contactCreationCheck(ContactData contactData) {
+        navigationHelper.goToHomePage();
+        if (!contactIs()) {
+            contactCreationProcess(contactData);
+        }
+    }
+
+    public boolean contactIs() {
+        return elementPresentIs(By.name("selected[]"));
+    }
+
+    public void contactCreationProcess(ContactData contactData) {
+        navigationHelper.goToAddNewPage();
+        contactEditFields(contactData, true);
+        contactEnterButton();
+        navigationHelper.goToHomePage();
+    }
+
+    public void contactModificationProcess(ContactData contactData) {
+        navigationHelper.goToHomePage();
+        contactEditImageLink();
+        contactEditFields(contactData, false);
+        contactUpdateButton();
+        navigationHelper.goToHomePage();
+    }
+
+    public void contactDeletionProcess() {
+        navigationHelper.goToHomePage();
+        contactCheckBox();
+        contactDeleteButton();
+        alertAccept();
+        navigationHelper.goToHomePage();
     }
 
 }

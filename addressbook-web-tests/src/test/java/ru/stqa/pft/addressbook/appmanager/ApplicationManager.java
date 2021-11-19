@@ -8,12 +8,12 @@ import org.openqa.selenium.remote.BrowserType;
 import java.util.concurrent.TimeUnit;
 
 public class ApplicationManager {
-    WebDriver wd;
+    WebDriver webDriver;
     public String browser;
-    public GroupHelper gh;
-    public ContactHelper ch;
-    public NavigationHelper nh;
-    public SessionHelper sh;
+    public GroupHelper groupHelper;
+    public ContactHelper contactHelper;
+    public NavigationHelper navigationHelper;
+    public SessionHelper sessionHelper;
 
     public ApplicationManager(String browser) {
         this.browser = browser;
@@ -21,35 +21,33 @@ public class ApplicationManager {
 
     public void start() {
         switch (browser) {
-            case BrowserType.CHROME -> wd = new ChromeDriver();
-            case BrowserType.FIREFOX -> wd = new FirefoxDriver();
+            case BrowserType.CHROME -> webDriver = new ChromeDriver();
+            case BrowserType.FIREFOX -> webDriver = new FirefoxDriver();
         }
-        wd.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
-        wd.get("http://localhost/addressbook/");
+        webDriver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+        webDriver.get("http://localhost/addressbook/");
 
-        gh = new GroupHelper(wd);
-        ch = new ContactHelper(wd);
-        nh = new NavigationHelper(wd);
-        sh = new SessionHelper(wd);
+        groupHelper = new GroupHelper(webDriver);
+        contactHelper = new ContactHelper(webDriver);
+        navigationHelper = new NavigationHelper(webDriver);
+        sessionHelper = new SessionHelper(webDriver);
 
-        sh.login("admin", "secret");
+        sessionHelper.login("admin", "secret");
     }
 
     public void stop() {
-        sh.logout();
-        wd.quit();
+        sessionHelper.logout();
+        webDriver.quit();
     }
 
-    public GroupHelper getGh() {
-        return gh;
+    public GroupHelper getGroupHelper() {
+        return groupHelper;
     }
 
-    public NavigationHelper getNh() {
-        return nh;
+    public NavigationHelper getNavigationHelper() {
+        return navigationHelper;
     }
 
-    public ContactHelper getCh() {
-        return ch;
-    }
+    public ContactHelper getContactHelper() { return contactHelper; }
 
 }

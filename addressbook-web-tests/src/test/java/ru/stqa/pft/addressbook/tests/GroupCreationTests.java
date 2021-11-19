@@ -4,15 +4,11 @@ import org.testng.annotations.Test;
 
 import ru.stqa.pft.addressbook.model.GroupData;
 
-public class GroupCreationTests extends TestBase {
+public class GroupCreationTests extends BaseTests {
 
     @Test
     public void testGroupCreation() {
-        app.getNh().goToGroupPage();
-        app.getGh().startGroupCreation();
-        app.getGh().fillGroupForm(new GroupData("test1", null, "test3"));
-        app.getGh().submitGroupCreation();
-        app.getNh().goToGroupPage();
+        applicationManager.getGroupHelper().groupCreationProcess(new GroupData("Test group name #1", "Test group header #1", "Test group footer #1"));
     }
 
 }
