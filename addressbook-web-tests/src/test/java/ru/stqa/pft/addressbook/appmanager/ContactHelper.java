@@ -2,10 +2,15 @@ package ru.stqa.pft.addressbook.appmanager;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
 
 import ru.stqa.pft.addressbook.model.ContactData;
+import ru.stqa.pft.addressbook.model.GroupData;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ContactHelper extends BaseHelper {
 
@@ -19,13 +24,11 @@ public class ContactHelper extends BaseHelper {
         click(By.name("submit"));
     }
 
-    public void contactCheckBox() {
-        click(By.name("selected[]"));
+    public void contactCheckBox(int contactIndex) {
+        webDriver.findElements(By.name("selected[]")).get(contactIndex).click();
     }
 
-    public void contactEditImageLink() {
-        click(By.xpath("//td[8]/a"));
-    }
+    public void contactEditImageLink() { click(By.xpath("//td[8]/a")); }
 
     public void contactUpdateButton() {
         click(By.name("update"));
@@ -61,37 +64,57 @@ public class ContactHelper extends BaseHelper {
         return webDriver.findElements(By.name("selected[]")).size();
     }
 
+    public List<ContactData> contactGetList() {
+        List<ContactData>  contactList = new ArrayList<ContactData>();
+        List<WebElement> webElements = webDriver.findElements(By.name("selected[]"));
+        for (WebElement webElement : webElements) {
+            String contactName = webElement.getText();
+            ContactData contactData = new ContactData(contactName, null, null, null);
+            contactList.add(contactData);
+        }
+        return contactList;
+    }
+
     public void contactCreationProcess(ContactData contactData) {
         navigationHelper.goToHomePage();
-        int contactCountBefore = contactGetCount();
+        List<ContactData> contactCountBefore = contactGetList();
+
         navigationHelper.goToAddNewPage();
         contactEditFields(contactData, true);
         contactEnterButton();
+
         navigationHelper.goToHomePage();
-        int contactCountAfter = contactGetCount();
-        Assert.assertEquals(contactCountAfter, contactCountBefore + 1);
+        List<ContactData> contactCountAfter = contactGetList();
+
+        Assert.assertEquals(contactCountAfter.size(), contactCountBefore.size() + 1);
     }
 
     public void contactModificationProcess(ContactData contactData) {
         navigationHelper.goToHomePage();
-        int contactCountBefore = contactGetCount();
+        List<ContactData> contactCountBefore = contactGetList();
+
         contactEditImageLink();
         contactEditFields(contactData, false);
         contactUpdateButton();
+
         navigationHelper.goToHomePage();
-        int contactCountAfter = contactGetCount();
-        Assert.assertEquals(contactCountAfter, contactCountBefore);
+        List<ContactData> contactCountAfter = contactGetList();
+
+        Assert.assertEquals(contactCountAfter.size(), contactCountBefore.size());
     }
 
     public void contactDeletionProcess() {
         navigationHelper.goToHomePage();
-        int contactCountBefore = contactGetCount();
-        contactCheckBox();
+        List<ContactData> contactCountBefore = contactGetList();
+
+        contactCheckBox(contactCountBefore.size() - 1);
         contactDeleteButton();
         alertAccept();
+
         navigationHelper.goToHomePage();
-        int contactCountAfter = contactGetCount();
-        Assert.assertEquals(contactCountAfter, contactCountBefore - 1);
+        List<ContactData> contactCountAfter = contactGetList();;
+
+        Assert.assertEquals(contactCountAfter.size(), contactCountBefore.size() - 1);
     }
 
 }

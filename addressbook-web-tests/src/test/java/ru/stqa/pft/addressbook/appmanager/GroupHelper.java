@@ -2,9 +2,13 @@ package ru.stqa.pft.addressbook.appmanager;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 
 import ru.stqa.pft.addressbook.model.GroupData;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GroupHelper extends BaseHelper {
 
@@ -22,8 +26,8 @@ public class GroupHelper extends BaseHelper {
         click(By.name("submit"));
     }
 
-    public void groupCheckBox() {
-        click(By.name("selected[]"));
+    public void groupCheckBox(int groupIndex) {
+        webDriver.findElements(By.name("selected[]")).get(groupIndex).click();
     }
 
     public void groupEditGroupButton() {
@@ -55,41 +59,57 @@ public class GroupHelper extends BaseHelper {
         return elementPresentIs(By.name("selected[]"));
     }
 
-    public int groupGetCount() {;
-        return webDriver.findElements(By.name("selected[]")).size();
+    public List<GroupData> groupGetList() {
+        List<GroupData>  groupList = new ArrayList<GroupData>();
+        List<WebElement> webElements = webDriver.findElements(By.cssSelector("span.group"));
+        for (WebElement webElement : webElements) {
+            String groupName = webElement.getText();
+            GroupData groupData = new GroupData(groupName, null, null);
+            groupList.add(groupData);
+        }
+        return groupList;
     }
 
     public void groupCreationProcess(GroupData groupData) {
         navigationHelper.goToGroupPage();
-        int groupCountBefore = groupGetCount();
+        List<GroupData> groupCountBefore = groupGetList();
+
         groupNewGroupButton();
         groupEditFields(groupData);
         groupEnterInformationButton();
+
         navigationHelper.goToGroupPage();
-        int groupCountAfter = groupGetCount();
-        Assert.assertEquals(groupCountAfter, groupCountBefore + 1);
+        List<GroupData> groupCountAfter = groupGetList();
+
+        Assert.assertEquals(groupCountAfter.size(), groupCountBefore.size() + 1);
     }
 
     public void groupModificationProcess(GroupData groupData) {
         navigationHelper.goToGroupPage();
-        int groupCountBefore = groupGetCount();
-        groupCheckBox();
+        List<GroupData> groupCountBefore = groupGetList();
+
+        groupCheckBox(groupCountBefore.size() - 1);
         groupEditGroupButton();
         groupEditFields(groupData);
         groupUpdateButton();
+
         navigationHelper.goToGroupPage();
-        int groupCountAfter = groupGetCount();
-        Assert.assertEquals(groupCountAfter, groupCountBefore);
+        List<GroupData> groupCountAfter = groupGetList();
+
+        Assert.assertEquals(groupCountAfter.size(), groupCountBefore.size());
     }
 
     public void groupDeletionProcess() {
         navigationHelper.goToGroupPage();
-        int groupCountBefore = groupGetCount();
-        groupCheckBox();
+        List<GroupData> groupCountBefore = groupGetList();
+
+        groupCheckBox(groupCountBefore.size() - 1);
         groupDeleteButton();
+
         navigationHelper.goToGroupPage();
-        int groupCountAfter = groupGetCount();
-        Assert.assertEquals(groupCountAfter, groupCountBefore - 1);
+        List<GroupData> groupCountAfter = groupGetList();
+
+        Assert.assertEquals(groupCountAfter.size(), groupCountBefore.size() - 1);
     }
 
 }
