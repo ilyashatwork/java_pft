@@ -8,6 +8,7 @@ import org.testng.Assert;
 import ru.stqa.pft.addressbook.model.GroupData;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class GroupHelper extends BaseHelper {
@@ -43,9 +44,9 @@ public class GroupHelper extends BaseHelper {
     }
 
     public void groupEditFields(GroupData groupData) {
-        print(By.name("group_name"), groupData.name());
-        print(By.name("group_header"), groupData.header());
-        print(By.name("group_footer"), groupData.footer());
+        print(By.name("group_name"), groupData.getName());
+        print(By.name("group_header"), groupData.getHeader());
+        print(By.name("group_footer"), groupData.getFooter());
     }
 
     public void groupCreationCheck(GroupData groupData) {
@@ -63,8 +64,9 @@ public class GroupHelper extends BaseHelper {
         List<GroupData>  groupList = new ArrayList<GroupData>();
         List<WebElement> webElements = webDriver.findElements(By.cssSelector("span.group"));
         for (WebElement webElement : webElements) {
+            int groupId = Integer.parseInt(webElement.findElement(By.tagName("input")).getAttribute("value"));
             String groupName = webElement.getText();
-            GroupData groupData = new GroupData(groupName, null, null);
+            GroupData groupData = new GroupData(groupId, groupName, null, null);
             groupList.add(groupData);
         }
         return groupList;
@@ -82,6 +84,15 @@ public class GroupHelper extends BaseHelper {
         List<GroupData> groupsAfter = groupGetList();
 
         Assert.assertEquals(groupsAfter.size(), groupsBefore.size() + 1);
+
+        GroupData groupExpected = new GroupData(groupData.getName(), null, null);
+
+        groupsBefore.add(groupExpected);
+
+        Comparator<? super GroupData> byId = (g1, g2) -> Integer.compare(g1.getId(), g2.getId());
+        groupsBefore.sort(byId);
+        groupsAfter.sort(byId);
+        Assert.assertEquals(groupsAfter, groupsBefore);
     }
 
     public void groupModificationProcess(GroupData groupData) {
@@ -97,6 +108,13 @@ public class GroupHelper extends BaseHelper {
         List<GroupData> groupsAfter = groupGetList();
 
         Assert.assertEquals(groupsAfter.size(), groupsBefore.size());
+        GroupData groupExpected = new GroupData(groupsBefore.get(groupsBefore.size() - 1).getId(), groupData.getName(), groupData.getFooter(), groupData.getHeader());
+        groupsBefore.remove(groupsBefore.size() - 1);
+        groupsBefore.add(groupExpected);
+        Comparator<? super GroupData> byId = (g1, g2) -> Integer.compare(g1.getId(), g2.getId());
+        groupsBefore.sort(byId);
+        groupsAfter.sort(byId);
+        Assert.assertEquals(groupsAfter, groupsBefore);
     }
 
     public void groupDeletionProcess() {
@@ -110,9 +128,11 @@ public class GroupHelper extends BaseHelper {
         List<GroupData> groupsAfter = groupGetList();
 
         Assert.assertEquals(groupsAfter.size(), groupsBefore.size() - 1);
-
         groupsBefore.remove(groupsBefore.size() - 1);
-        Assert.assertEquals(groupsBefore, groupsAfter);
+        Comparator<? super GroupData> byId = (g1, g2) -> Integer.compare(g1.getId(), g2.getId());
+        groupsBefore.sort(byId);
+        groupsAfter.sort(byId);
+        Assert.assertEquals(groupsAfter, groupsBefore);
     }
 
 }
