@@ -50,9 +50,8 @@ public class ContactHelper extends BaseHelper {
     }
 
     public void contactCreationCheck(ContactData contactData) {
-        navigationHelper.goToHomePage();
         if (!contactIs()) {
-            contactCreationProcess(contactData);
+            contactCreation(contactData);
         }
     }
 
@@ -75,61 +74,22 @@ public class ContactHelper extends BaseHelper {
         return contactListOfContactData;
     }
 
-    public void contactCreationProcess(ContactData contactData) {
-        navigationHelper.goToHomePage();
-        List<ContactData> contactsBefore = contactGetList();
-
+    public void contactCreation(ContactData contactData) {
         navigationHelper.goToAddNewPage();
         contactEditFields(contactData, true);
         contactEnterButton();
-
-        navigationHelper.goToHomePage();
-        List<ContactData> contactsAfter = contactGetList();
-
-        Assert.assertEquals(contactsAfter.size(), contactsBefore.size() + 1);
-        ContactData contactExpected = new ContactData(contactData.getLastName(), contactData.getFirstName(), contactData.getMobile(), contactData.getGroupValue());
-        contactsBefore.add(contactExpected);
-        Comparator<? super ContactData> byLastName = (c1, c2) -> c1.getLastName().compareTo(c2.getLastName());
-        contactsBefore.sort(byLastName);
-        contactsAfter.sort(byLastName);
-        Assert.assertEquals(contactsAfter, contactsBefore);
     }
 
-    public void contactModificationProcess(ContactData contactData) {
-        navigationHelper.goToHomePage();
-        List<ContactData> contactsBefore = contactGetList();
-
+    public void contactModification(ContactData contactData) {
         contactEditImageLink();
         contactEditFields(contactData, false);
         contactUpdateButton();
-
-        navigationHelper.goToHomePage();
-        List<ContactData> contactsAfter = contactGetList();
-
-        Assert.assertEquals(contactsAfter.size(), contactsBefore.size());
-        ContactData contactExpected = new ContactData(contactData.getLastName(), contactData.getFirstName(), contactData.getMobile(), contactData.getGroupValue());
-        contactsBefore.set(0, contactExpected);
-        Comparator<? super ContactData> byLastName = (c1, c2) -> c1.getLastName().compareTo(c2.getLastName());
-        contactsBefore.sort(byLastName);
-        contactsAfter.sort(byLastName);
-        Assert.assertEquals(contactsAfter, contactsBefore);
     }
 
-    public void contactDeletionProcess() {
-        navigationHelper.goToHomePage();
-        List<ContactData> contactsBefore = contactGetList();
-
-        contactCheckBox(contactsBefore.size() - 1);
+    public void contactDeletion(int index) {
+        contactCheckBox(index);
         contactDeleteButton();
         alertAccept();
-
-        navigationHelper.goToHomePage();
-        List<ContactData> contactsAfter = contactGetList();
-        ;
-
-        Assert.assertEquals(contactsAfter.size(), contactsBefore.size() - 1);
-        contactsBefore.remove(contactsBefore.size() - 1);
-        Assert.assertEquals(contactsAfter, contactsBefore);
     }
 
 }
