@@ -21,8 +21,8 @@ public class ContactModificationTests extends BaseTests {
         List<GroupData> groupsList = app.group().list();
 
         app.goTo().homePage();
-        app.contact().creationCheck(new ContactData("Test last name #1", "Test first name #1", "Test mobile #1",
-                Integer.toString(groupsList.get(groupsList.size() - 1).getId())));
+        app.contact().creationCheck(new ContactData().withLastName("Test last name #1").withFirstName("Test first name #1").withMobile("Test mobile #1").
+                withGroupValue(Integer.toString(groupsList.get(groupsList.size() - 1).getId())));
     }
 
     @Test
@@ -30,14 +30,14 @@ public class ContactModificationTests extends BaseTests {
         app.goTo().groupPage();
         List<GroupData> groupsList = app.group().list();
 
-        ContactData contactExpected = new ContactData("Test last name #2", "Test first name #2", "Test mobile #2",
-                Integer.toString(groupsList.get(groupsList.size() - 1).getId()));
+        ContactData contactExpected = new ContactData().withLastName("Test last name #2").withFirstName("Test first name #2").withMobile("Test mobile #2").
+                withGroupValue(Integer.toString(groupsList.get(groupsList.size() - 1).getId()));
 
         app.goTo().homePage();
         List<ContactData> contactsBefore = app.contact().list();
 
-        app.contact().modify(new ContactData("Test last name #2", "Test first name #2", "Test mobile #2",
-                Integer.toString(groupsList.get(groupsList.size() - 1).getId())));
+        app.contact().modify(new ContactData().withLastName("Test last name #2").withFirstName("Test first name #2").withMobile("Test mobile #2").
+                withGroupValue(Integer.toString(groupsList.get(groupsList.size() - 1).getId())));
 
         app.goTo().homePage();
         List<ContactData> contactsAfter = app.contact().list();

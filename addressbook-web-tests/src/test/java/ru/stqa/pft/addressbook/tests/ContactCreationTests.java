@@ -23,14 +23,14 @@ public class ContactCreationTests extends BaseTests {
         app.goTo().groupPage();
         List<GroupData> groupsList = app.group().list();
 
-        ContactData contactExpected = new ContactData("Test last name #1", "Test first name #1", "Test mobile #1",
-                Integer.toString(groupsList.get(groupsList.size() - 1).getId()));
+        ContactData contactExpected = new ContactData().withLastName("Test last name #1").withFirstName("Test first name #1").withMobile("Test mobile #1").
+                withGroupValue(Integer.toString(groupsList.get(groupsList.size() - 1).getId()));
 
         app.goTo().homePage();
         List<ContactData> contactsBefore = app.contact().list();
 
-        app.contact().create(new ContactData("Test last name #1", "Test first name #1", "Test mobile #1",
-                Integer.toString(groupsList.get(groupsList.size() - 1).getId())));
+        app.contact().create(new ContactData().withLastName("Test last name #1").withFirstName("Test first name #1").withMobile("Test mobile #1").
+                withGroupValue(Integer.toString(groupsList.get(groupsList.size() - 1).getId())));
 
         app.goTo().homePage();
         List<ContactData> contactsAfter = app.contact().list();

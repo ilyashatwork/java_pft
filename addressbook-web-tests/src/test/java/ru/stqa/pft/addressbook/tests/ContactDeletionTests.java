@@ -20,8 +20,8 @@ public class ContactDeletionTests extends BaseTests {
         List<GroupData> groupsList = app.group().list();
 
         app.goTo().homePage();
-        app.contact().creationCheck(new ContactData("Test last name #1", "Test first name #1", "Test mobile #1",
-                Integer.toString(groupsList.get(groupsList.size() - 1).getId())));
+        app.contact().creationCheck(new ContactData().withLastName("Test last name #1").withFirstName("Test first name #1").withMobile("Test mobile #1").
+                withGroupValue(Integer.toString(groupsList.get(groupsList.size() - 1).getId())));
     }
 
     @Test
