@@ -8,8 +8,7 @@ import org.testng.Assert;
 
 import ru.stqa.pft.addressbook.model.ContactData;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class ContactHelper extends BaseHelper {
 
@@ -27,7 +26,9 @@ public class ContactHelper extends BaseHelper {
         webDriver.findElements(By.name("selected[]")).get(contactIndex).click();
     }
 
-    public void contactEditImageLink() { click(By.xpath("//td[8]/a")); }
+    public void contactEditImageLink() {
+        click(By.xpath("//table[@id='maintable']/tbody/tr[2]/td[8]/a/img"));
+    }
 
     public void contactUpdateButton() {
         click(By.name("update"));
@@ -38,11 +39,11 @@ public class ContactHelper extends BaseHelper {
     }
 
     public void contactEditFields(ContactData contactData, boolean creationIs) {
-        print(By.name("firstname"), contactData.firstName());
-        print(By.name("lastname"), contactData.lastName());
-        print(By.name("mobile"), contactData.mobile());
+        print(By.name("lastname"), contactData.getLastName());
+        print(By.name("firstname"), contactData.getFirstName());
+        print(By.name("mobile"), contactData.getMobile());
         if (creationIs) {
-            new Select(webDriver.findElement(By.name("new_group"))).selectByValue("112");
+            new Select(webDriver.findElement(By.name("new_group"))).selectByValue(contactData.getGroupValue());
         } else {
             Assert.assertFalse(elementPresentIs(By.name("new_group")));
         }
@@ -60,14 +61,18 @@ public class ContactHelper extends BaseHelper {
     }
 
     public List<ContactData> contactGetList() {
-        List<ContactData>  contactList = new ArrayList<ContactData>();
-        List<WebElement> webElements = webDriver.findElements(By.name("selected[]"));
-        for (WebElement webElement : webElements) {
-            String contactName = webElement.getText();
-            ContactData contactData = new ContactData(contactName, null, null, null);
-            contactList.add(contactData);
+        List<ContactData> contactListOfContactData = new ArrayList<ContactData>();
+        List<WebElement> contactWebElements = webDriver.findElements(By.name("selected[]"));
+        int index = 2;
+        for (WebElement contactWebElement : contactWebElements) {
+            String stringIndex = String.valueOf(index);
+            String lastName = contactWebElement.findElement(By.xpath("//table[@id='maintable']/tbody/tr[" + stringIndex + "]/td[2]")).getText();
+            String firstName = contactWebElement.findElement(By.xpath("//table[@id='maintable']/tbody/tr[" + stringIndex + "]/td[3]")).getText();
+            index++;
+            ContactData contactData = new ContactData(lastName, firstName, null, null);
+            contactListOfContactData.add(contactData);
         }
-        return contactList;
+        return contactListOfContactData;
     }
 
     public void contactCreationProcess(ContactData contactData) {
@@ -82,6 +87,12 @@ public class ContactHelper extends BaseHelper {
         List<ContactData> contactsAfter = contactGetList();
 
         Assert.assertEquals(contactsAfter.size(), contactsBefore.size() + 1);
+        ContactData contactExpected = new ContactData(contactData.getLastName(), contactData.getFirstName(), contactData.getMobile(), contactData.getGroupValue());
+        contactsBefore.add(contactExpected);
+        Comparator<? super ContactData> byLastName = (c1, c2) -> c1.getLastName().compareTo(c2.getLastName());
+        contactsBefore.sort(byLastName);
+        contactsAfter.sort(byLastName);
+        Assert.assertEquals(contactsAfter, contactsBefore);
     }
 
     public void contactModificationProcess(ContactData contactData) {
@@ -96,6 +107,12 @@ public class ContactHelper extends BaseHelper {
         List<ContactData> contactsAfter = contactGetList();
 
         Assert.assertEquals(contactsAfter.size(), contactsBefore.size());
+        ContactData contactExpected = new ContactData(contactData.getLastName(), contactData.getFirstName(), contactData.getMobile(), contactData.getGroupValue());
+        contactsBefore.set(0, contactExpected);
+        Comparator<? super ContactData> byLastName = (c1, c2) -> c1.getLastName().compareTo(c2.getLastName());
+        contactsBefore.sort(byLastName);
+        contactsAfter.sort(byLastName);
+        Assert.assertEquals(contactsAfter, contactsBefore);
     }
 
     public void contactDeletionProcess() {
@@ -107,12 +124,12 @@ public class ContactHelper extends BaseHelper {
         alertAccept();
 
         navigationHelper.goToHomePage();
-        List<ContactData> contactsAfter = contactGetList();;
+        List<ContactData> contactsAfter = contactGetList();
+        ;
 
         Assert.assertEquals(contactsAfter.size(), contactsBefore.size() - 1);
-
         contactsBefore.remove(contactsBefore.size() - 1);
-        Assert.assertEquals(contactsBefore, contactsAfter);
+        Assert.assertEquals(contactsAfter, contactsBefore);
     }
 
 }

@@ -22,10 +22,21 @@ public class GroupData {
         this.footer = footer;
     }
 
-    public int getId() { return id; }
-    public String getName() { return name; }
-    public String getHeader() { return header; }
-    public String getFooter() { return footer; }
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getHeader() {
+        return header;
+    }
+
+    public String getFooter() {
+        return footer;
+    }
 
     @Override
     public String toString() {

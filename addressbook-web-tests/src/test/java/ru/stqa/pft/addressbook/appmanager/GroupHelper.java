@@ -61,15 +61,15 @@ public class GroupHelper extends BaseHelper {
     }
 
     public List<GroupData> groupGetList() {
-        List<GroupData>  groupList = new ArrayList<GroupData>();
-        List<WebElement> webElements = webDriver.findElements(By.cssSelector("span.group"));
-        for (WebElement webElement : webElements) {
-            int groupId = Integer.parseInt(webElement.findElement(By.tagName("input")).getAttribute("value"));
-            String groupName = webElement.getText();
+        List<GroupData> groupListOfGroupData = new ArrayList<GroupData>();
+        List<WebElement> groupWebElements = webDriver.findElements(By.cssSelector("span.group"));
+        for (WebElement groupWebElement : groupWebElements) {
+            int groupId = Integer.parseInt(groupWebElement.findElement(By.tagName("input")).getAttribute("value"));
+            String groupName = groupWebElement.getText();
             GroupData groupData = new GroupData(groupId, groupName, null, null);
-            groupList.add(groupData);
+            groupListOfGroupData.add(groupData);
         }
-        return groupList;
+        return groupListOfGroupData;
     }
 
     public void groupCreationProcess(GroupData groupData) {
@@ -84,11 +84,8 @@ public class GroupHelper extends BaseHelper {
         List<GroupData> groupsAfter = groupGetList();
 
         Assert.assertEquals(groupsAfter.size(), groupsBefore.size() + 1);
-
         GroupData groupExpected = new GroupData(groupData.getName(), null, null);
-
         groupsBefore.add(groupExpected);
-
         Comparator<? super GroupData> byId = (g1, g2) -> Integer.compare(g1.getId(), g2.getId());
         groupsBefore.sort(byId);
         groupsAfter.sort(byId);
@@ -109,8 +106,7 @@ public class GroupHelper extends BaseHelper {
 
         Assert.assertEquals(groupsAfter.size(), groupsBefore.size());
         GroupData groupExpected = new GroupData(groupsBefore.get(groupsBefore.size() - 1).getId(), groupData.getName(), groupData.getFooter(), groupData.getHeader());
-        groupsBefore.remove(groupsBefore.size() - 1);
-        groupsBefore.add(groupExpected);
+        groupsBefore.set(0, groupExpected);
         Comparator<? super GroupData> byId = (g1, g2) -> Integer.compare(g1.getId(), g2.getId());
         groupsBefore.sort(byId);
         groupsAfter.sort(byId);
