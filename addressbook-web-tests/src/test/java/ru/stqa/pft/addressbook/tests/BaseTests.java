@@ -8,14 +8,14 @@ import ru.stqa.pft.addressbook.appmanager.ApplicationManager;
 
 public class BaseTests {
 
-    protected static final ApplicationManager applicationManager = new ApplicationManager(BrowserType.CHROME);
+    protected static final ApplicationManager app = new ApplicationManager(BrowserType.CHROME);
 
     @BeforeSuite
-    public void start() { applicationManager.start(); }
+    public void start() { app.start(); }
 
     @AfterSuite
     public void stop() {
-        applicationManager.stop();
+        app.stop();
     }
 
 }

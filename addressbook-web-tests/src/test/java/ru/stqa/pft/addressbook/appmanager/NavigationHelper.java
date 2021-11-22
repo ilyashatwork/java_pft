@@ -9,14 +9,14 @@ public class NavigationHelper extends BaseHelper {
         super(webDriver);
     }
 
-    public void goToHomePage() {
+    public void homePage() {
         if (elementPresentIs(By.id("maintable"))) {
             return;
         }
         click(By.linkText("home"));
     }
 
-    public void goToGroupPage() {
+    public void groupPage() {
         if (elementPresentIs(By.tagName("h1"))
                 && webDriver.findElement(By.tagName("h1")).getText().equals("Groups")
                 && elementPresentIs(By.name("new"))) {
@@ -25,7 +25,7 @@ public class NavigationHelper extends BaseHelper {
         click(By.linkText("groups"));
     }
 
-    public void goToAddNewPage() {
+    public void addNewPage() {
         if (elementPresentIs(By.tagName("h1"))
                 && webDriver.findElement(By.tagName("h1")).getText().equals("Edit / add address book entry")
                 && elementPresentIs(By.name("submit"))) {

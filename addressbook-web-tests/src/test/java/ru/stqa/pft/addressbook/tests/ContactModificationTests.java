@@ -14,33 +14,33 @@ public class ContactModificationTests extends BaseTests {
 
     @BeforeMethod
     public void ensurePreconditions() {
-        applicationManager.navigationHelper.goToGroupPage();
-        applicationManager.getGroupHelper().groupCreationCheck(new GroupData("Test group name #1", "Test group header #1", "Test group footer #1"));
+        app.goTo().groupPage();
+        app.group().creationCheck(new GroupData().withName("Test group name #1").withHeader("Test group header #1").withFooter("Test group footer #1"));
 
-        applicationManager.navigationHelper.goToGroupPage();
-        List<GroupData> groupsList = applicationManager.getGroupHelper().groupGetList();
+        app.goTo().groupPage();
+        List<GroupData> groupsList = app.group().list();
 
-        applicationManager.getNavigationHelper().goToHomePage();
-        applicationManager.getContactHelper().contactCreationCheck(new ContactData("Test last name #1", "Test first name #1", "Test mobile #1",
+        app.goTo().homePage();
+        app.contact().creationCheck(new ContactData("Test last name #1", "Test first name #1", "Test mobile #1",
                 Integer.toString(groupsList.get(groupsList.size() - 1).getId())));
     }
 
     @Test
     public void testContactModification() {
-        applicationManager.navigationHelper.goToGroupPage();
-        List<GroupData> groupsList = applicationManager.getGroupHelper().groupGetList();
+        app.goTo().groupPage();
+        List<GroupData> groupsList = app.group().list();
 
         ContactData contactExpected = new ContactData("Test last name #2", "Test first name #2", "Test mobile #2",
                 Integer.toString(groupsList.get(groupsList.size() - 1).getId()));
 
-        applicationManager.getNavigationHelper().goToHomePage();
-        List<ContactData> contactsBefore = applicationManager.getContactHelper().contactGetList();
+        app.goTo().homePage();
+        List<ContactData> contactsBefore = app.contact().list();
 
-        applicationManager.getContactHelper().contactModification(new ContactData("Test last name #2", "Test first name #2", "Test mobile #2",
+        app.contact().modify(new ContactData("Test last name #2", "Test first name #2", "Test mobile #2",
                 Integer.toString(groupsList.get(groupsList.size() - 1).getId())));
 
-        applicationManager.navigationHelper.goToHomePage();
-        List<ContactData> contactsAfter = applicationManager.getContactHelper().contactGetList();
+        app.goTo().homePage();
+        List<ContactData> contactsAfter = app.contact().list();
 
         Assert.assertEquals(contactsAfter.size(), contactsBefore.size());
         contactsBefore.set(0, contactExpected);

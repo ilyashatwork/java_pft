@@ -18,27 +18,27 @@ public class ContactHelper extends BaseHelper {
 
     NavigationHelper navigationHelper = new NavigationHelper(webDriver);
 
-    public void contactEnterButton() {
+    public void enterButton() {
         click(By.name("submit"));
     }
 
-    public void contactCheckBox(int contactIndex) {
+    public void checkBox(int contactIndex) {
         webDriver.findElements(By.name("selected[]")).get(contactIndex).click();
     }
 
-    public void contactEditImageLink() {
+    public void editImageLink() {
         click(By.xpath("//table[@id='maintable']/tbody/tr[2]/td[8]/a/img"));
     }
 
-    public void contactUpdateButton() {
+    public void updateButton() {
         click(By.name("update"));
     }
 
-    public void contactDeleteButton() {
+    public void deleteButton() {
         click(By.xpath("//input[@value='Delete']"));
     }
 
-    public void contactEditFields(ContactData contactData, boolean creationIs) {
+    public void editFields(ContactData contactData, boolean creationIs) {
         print(By.name("lastname"), contactData.getLastName());
         print(By.name("firstname"), contactData.getFirstName());
         print(By.name("mobile"), contactData.getMobile());
@@ -49,9 +49,9 @@ public class ContactHelper extends BaseHelper {
         }
     }
 
-    public void contactCreationCheck(ContactData contactData) {
+    public void creationCheck(ContactData contactData) {
         if (!contactIs()) {
-            contactCreation(contactData);
+            create(contactData);
         }
     }
 
@@ -59,7 +59,7 @@ public class ContactHelper extends BaseHelper {
         return elementPresentIs(By.name("selected[]"));
     }
 
-    public List<ContactData> contactGetList() {
+    public List<ContactData> list() {
         List<ContactData> contactListOfContactData = new ArrayList<ContactData>();
         List<WebElement> contactWebElements = webDriver.findElements(By.name("selected[]"));
         int index = 2;
@@ -74,21 +74,21 @@ public class ContactHelper extends BaseHelper {
         return contactListOfContactData;
     }
 
-    public void contactCreation(ContactData contactData) {
-        navigationHelper.goToAddNewPage();
-        contactEditFields(contactData, true);
-        contactEnterButton();
+    public void create(ContactData contactData) {
+        navigationHelper.addNewPage();
+        editFields(contactData, true);
+        enterButton();
     }
 
-    public void contactModification(ContactData contactData) {
-        contactEditImageLink();
-        contactEditFields(contactData, false);
-        contactUpdateButton();
+    public void modify(ContactData contactData) {
+        editImageLink();
+        editFields(contactData, false);
+        updateButton();
     }
 
-    public void contactDeletion(int index) {
-        contactCheckBox(index);
-        contactDeleteButton();
+    public void delete(int index) {
+        checkBox(index);
+        deleteButton();
         alertAccept();
     }
 

@@ -15,39 +15,39 @@ public class GroupHelper extends BaseHelper {
         super(webDriver);
     }
 
-    public void groupNewGroupButton() {
+    public void newGroupButton() {
         click(By.name("new"));
     }
 
-    public void groupEnterInformationButton() {
+    public void enterInformationButton() {
         click(By.name("submit"));
     }
 
-    public void groupCheckBox(int groupIndex) {
+    public void checkBox(int groupIndex) {
         webDriver.findElements(By.name("selected[]")).get(groupIndex).click();
     }
 
-    public void groupEditGroupButton() {
+    public void editGroupButton() {
         click(By.name("edit"));
     }
 
-    public void groupUpdateButton() {
+    public void updateButton() {
         click(By.name("update"));
     }
 
-    public void groupDeleteButton() {
+    public void deleteButton() {
         click(By.xpath("//input[5]"));
     }
 
-    public void groupEditFields(GroupData groupData) {
+    public void editFields(GroupData groupData) {
         print(By.name("group_name"), groupData.getName());
         print(By.name("group_header"), groupData.getHeader());
         print(By.name("group_footer"), groupData.getFooter());
     }
 
-    public void groupCreationCheck(GroupData groupData) {
+    public void creationCheck(GroupData groupData) {
         if (!groupIs()) {
-            groupCreation(groupData);
+            create(groupData);
         }
     }
 
@@ -55,34 +55,34 @@ public class GroupHelper extends BaseHelper {
         return elementPresentIs(By.name("selected[]"));
     }
 
-    public List<GroupData> groupGetList() {
+    public List<GroupData> list() {
         List<GroupData> groupListOfGroupData = new ArrayList<GroupData>();
         List<WebElement> groupWebElements = webDriver.findElements(By.cssSelector("span.group"));
         for (WebElement groupWebElement : groupWebElements) {
             int groupId = Integer.parseInt(groupWebElement.findElement(By.tagName("input")).getAttribute("value"));
             String groupName = groupWebElement.getText();
-            GroupData groupData = new GroupData(groupId, groupName, null, null);
+            GroupData groupData = new GroupData().withId(groupId).withName(groupName);
             groupListOfGroupData.add(groupData);
         }
         return groupListOfGroupData;
     }
 
-    public void groupCreation(GroupData groupData) {
-        groupNewGroupButton();
-        groupEditFields(groupData);
-        groupEnterInformationButton();
+    public void create(GroupData groupData) {
+        newGroupButton();
+        editFields(groupData);
+        enterInformationButton();
     }
 
-    public void groupModification(GroupData groupData, int index) {
-        groupCheckBox(index);
-        groupEditGroupButton();
-        groupEditFields(groupData);
-        groupUpdateButton();
+    public void modify(GroupData groupData, int index) {
+        checkBox(index);
+        editGroupButton();
+        editFields(groupData);
+        updateButton();
     }
 
-    public void groupDeletion(int index) {
-        groupCheckBox(index);
-        groupDeleteButton();
+    public void delete(int index) {
+        checkBox(index);
+        deleteButton();
     }
 
 }

@@ -13,22 +13,22 @@ public class GroupModificationTests extends BaseTests {
 
     @BeforeMethod
     public void ensurePreconditions() {
-        applicationManager.navigationHelper.goToGroupPage();
-        applicationManager.getGroupHelper().groupCreationCheck(new GroupData("Test group name #1", "Test group header #1", "Test group footer #1"));
+        app.goTo().groupPage();
+        app.group().creationCheck(new GroupData().withName("Test group name #1").withHeader("Test group header #1").withFooter("Test group footer #1"));
     }
 
     @Test
     public void testGroupModification() {
-        applicationManager.navigationHelper.goToGroupPage();
-        List<GroupData> groupsBefore = applicationManager.groupHelper.groupGetList();
+        app.goTo().groupPage();
+        List<GroupData> groupsBefore = app.groupHelper.list();
 
         int index = groupsBefore.size() - 1;
-        GroupData groupExpected = new GroupData(groupsBefore.get(index).getId(), "Test group name #0", "Test group header #2", "Test group footer #2");
+        GroupData groupExpected = new GroupData().withId(groupsBefore.get(index).getId()).withName("Test group name #0").withHeader("Test group header #2").withFooter("Test group footer #2");
 
-        applicationManager.groupHelper.groupModification(new GroupData("Test group name #0", "Test group header #2", "Test group footer #2"), index);
+        app.groupHelper.modify(new GroupData().withName("Test group name #0").withHeader("Test group header #2").withFooter("Test group footer #2"), index);
 
-        applicationManager.navigationHelper.goToGroupPage();
-        List<GroupData> groupsAfter = applicationManager.groupHelper.groupGetList();
+        app.goTo().groupPage();
+        List<GroupData> groupsAfter = app.groupHelper.list();
 
         Assert.assertEquals(groupsAfter.size(), groupsBefore.size());
         groupsBefore.set(index, groupExpected);

@@ -14,26 +14,26 @@ public class ContactCreationTests extends BaseTests {
 
     @BeforeMethod
     public void ensurePreconditions() {
-        applicationManager.navigationHelper.goToGroupPage();
-        applicationManager.getGroupHelper().groupCreationCheck(new GroupData("Test group name #1", "Test group header #1", "Test group footer #1"));
+        app.goTo().groupPage();
+        app.group().creationCheck(new GroupData().withName("Test group name #1").withHeader("Test group header #1").withFooter("Test group footer #1"));
     }
 
     @Test
     public void testContactCreation() {
-        applicationManager.navigationHelper.goToGroupPage();
-        List<GroupData> groupsList = applicationManager.getGroupHelper().groupGetList();
+        app.goTo().groupPage();
+        List<GroupData> groupsList = app.group().list();
 
         ContactData contactExpected = new ContactData("Test last name #1", "Test first name #1", "Test mobile #1",
                 Integer.toString(groupsList.get(groupsList.size() - 1).getId()));
 
-        applicationManager.navigationHelper.goToHomePage();
-        List<ContactData> contactsBefore = applicationManager.getContactHelper().contactGetList();
+        app.goTo().homePage();
+        List<ContactData> contactsBefore = app.contact().list();
 
-        applicationManager.getContactHelper().contactCreation(new ContactData("Test last name #1", "Test first name #1", "Test mobile #1",
+        app.contact().create(new ContactData("Test last name #1", "Test first name #1", "Test mobile #1",
                 Integer.toString(groupsList.get(groupsList.size() - 1).getId())));
 
-        applicationManager.navigationHelper.goToHomePage();
-        List<ContactData> contactsAfter = applicationManager.getContactHelper().contactGetList();
+        app.goTo().homePage();
+        List<ContactData> contactsAfter = app.contact().list();
 
         Assert.assertEquals(contactsAfter.size(), contactsBefore.size() + 1);
         contactsBefore.add(contactExpected);
