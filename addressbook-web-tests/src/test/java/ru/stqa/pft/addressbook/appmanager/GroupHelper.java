@@ -6,8 +6,9 @@ import org.openqa.selenium.WebElement;
 
 import ru.stqa.pft.addressbook.model.GroupData;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class GroupHelper extends BaseHelper {
 
@@ -23,9 +24,7 @@ public class GroupHelper extends BaseHelper {
         click(By.name("submit"));
     }
 
-    public void checkBox(int groupIndex) {
-        webDriver.findElements(By.name("selected[]")).get(groupIndex).click();
-    }
+    public void checkBox(int id) { webDriver.findElement(By.cssSelector("input[value='" + id + "']")).click(); }
 
     public void editGroupButton() {
         click(By.name("edit"));
@@ -39,50 +38,37 @@ public class GroupHelper extends BaseHelper {
         click(By.xpath("//input[5]"));
     }
 
-    public void editFields(GroupData groupData) {
-        print(By.name("group_name"), groupData.getName());
-        print(By.name("group_header"), groupData.getHeader());
-        print(By.name("group_footer"), groupData.getFooter());
+    public void editFields(GroupData data) {
+        print(By.name("group_name"), data.getName());
     }
 
-    public void creationCheck(GroupData groupData) {
-        if (!groupIs()) {
-            create(groupData);
+    public Set<GroupData> set() {
+        Set<GroupData> set = new HashSet<>();
+        List<WebElement> webElements = webDriver.findElements(By.cssSelector("span.group"));
+        for (WebElement webElement : webElements) {
+            int id = Integer.parseInt(webElement.findElement(By.tagName("input")).getAttribute("value"));
+            String name = webElement.getText();
+            GroupData data = new GroupData().withId(id).withName(name);
+            set.add(data);
         }
+        return set;
     }
 
-    public boolean groupIs() {
-        return elementPresentIs(By.name("selected[]"));
-    }
-
-    public List<GroupData> list() {
-        List<GroupData> groupListOfGroupData = new ArrayList<GroupData>();
-        List<WebElement> groupWebElements = webDriver.findElements(By.cssSelector("span.group"));
-        for (WebElement groupWebElement : groupWebElements) {
-            int groupId = Integer.parseInt(groupWebElement.findElement(By.tagName("input")).getAttribute("value"));
-            String groupName = groupWebElement.getText();
-            GroupData groupData = new GroupData().withId(groupId).withName(groupName);
-            groupListOfGroupData.add(groupData);
-        }
-        return groupListOfGroupData;
-    }
-
-    public void create(GroupData groupData) {
+    public void create(GroupData data) {
         newGroupButton();
-        editFields(groupData);
+        editFields(data);
         enterInformationButton();
     }
 
-    public void modify(GroupData groupData, int index) {
-        checkBox(index);
+    public void modify(GroupData data) {
+        checkBox(data.getId());
         editGroupButton();
-        editFields(groupData);
+        editFields(data);
         updateButton();
     }
 
-    public void delete(int index) {
-        checkBox(index);
+    public void delete(GroupData data) {
+        checkBox(data.getId());
         deleteButton();
     }
-
 }

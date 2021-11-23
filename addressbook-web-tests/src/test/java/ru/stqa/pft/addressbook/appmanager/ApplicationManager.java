@@ -10,10 +10,10 @@ import java.util.concurrent.TimeUnit;
 public class ApplicationManager {
     WebDriver webDriver;
     public String browser;
-    public GroupHelper groupHelper;
-    public ContactHelper contactHelper;
-    public NavigationHelper navigationHelper;
-    public SessionHelper sessionHelper;
+    public SessionHelper session;
+    public NavigationHelper goTo;
+    public GroupHelper groups;
+    public ContactHelper contacts;
 
     public ApplicationManager(String browser) {
         this.browser = browser;
@@ -27,29 +27,29 @@ public class ApplicationManager {
         webDriver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
         webDriver.get("http://localhost/addressbook/");
 
-        groupHelper = new GroupHelper(webDriver);
-        contactHelper = new ContactHelper(webDriver);
-        navigationHelper = new NavigationHelper(webDriver);
-        sessionHelper = new SessionHelper(webDriver);
+        session = new SessionHelper(webDriver);
+        goTo = new NavigationHelper(webDriver);
+        groups = new GroupHelper(webDriver);
+        contacts = new ContactHelper(webDriver);
 
-        sessionHelper.login("admin", "secret");
+        session.login("admin", "secret");
     }
 
     public void stop() {
-        sessionHelper.logout();
+        session.logout();
         webDriver.quit();
     }
 
-    public GroupHelper group() {
-        return groupHelper;
-    }
-
     public NavigationHelper goTo() {
-        return navigationHelper;
+        return goTo;
     }
 
-    public ContactHelper contact() {
-        return contactHelper;
+    public GroupHelper groups() {
+        return groups;
+    }
+
+    public ContactHelper contacts() {
+        return contacts;
     }
 
 }

@@ -3,10 +3,12 @@ package ru.stqa.pft.addressbook.model;
 import java.util.Objects;
 
 public class ContactData {
+    private int id = Integer.MAX_VALUE;
     private String lastName;
     private String firstName;
-    private String mobile;
     private String groupValue;
+
+    public int getId() { return id; }
 
     public String getLastName() {
         return lastName;
@@ -16,12 +18,11 @@ public class ContactData {
         return firstName;
     }
 
-    public String getMobile() {
-        return mobile;
-    }
+    public String getGroupValue() { return groupValue; }
 
-    public String getGroupValue() {
-        return groupValue;
+    public ContactData withId(int id) {
+        this.id = id;
+        return this;
     }
 
     public ContactData withLastName(String lastName) {
@@ -34,11 +35,6 @@ public class ContactData {
         return this;
     }
 
-    public ContactData withMobile(String mobile) {
-        this.mobile = mobile;
-        return this;
-    }
-
     public ContactData withGroupValue(String groupValue) {
         this.groupValue = groupValue;
         return this;
@@ -47,7 +43,8 @@ public class ContactData {
     @Override
     public String toString() {
         return "ContactData{" +
-                "lastName='" + lastName + '\'' +
+                "id=" + id +
+                ", lastName='" + lastName + '\'' +
                 ", firstName='" + firstName + '\'' +
                 '}';
     }
@@ -57,12 +54,12 @@ public class ContactData {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ContactData that = (ContactData) o;
-        return Objects.equals(lastName, that.lastName) && Objects.equals(firstName, that.firstName);
+        return id == that.id && Objects.equals(lastName, that.lastName) && Objects.equals(firstName, that.firstName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(lastName, firstName);
+        return Objects.hash(id, lastName, firstName);
     }
 
 }

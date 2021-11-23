@@ -8,7 +8,9 @@ import org.testng.Assert;
 
 import ru.stqa.pft.addressbook.model.ContactData;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class ContactHelper extends BaseHelper {
 
@@ -16,18 +18,16 @@ public class ContactHelper extends BaseHelper {
         super(webDriver);
     }
 
-    NavigationHelper navigationHelper = new NavigationHelper(webDriver);
+    NavigationHelper goTo = new NavigationHelper(webDriver);
 
     public void enterButton() {
         click(By.name("submit"));
     }
 
-    public void checkBox(int contactIndex) {
-        webDriver.findElements(By.name("selected[]")).get(contactIndex).click();
-    }
+    public void checkBox(int id){ webDriver.findElement(By.cssSelector("input[value='" + id + "']")).click(); }
 
-    public void editImageLink() {
-        click(By.xpath("//table[@id='maintable']/tbody/tr[2]/td[8]/a/img"));
+    public void editImageLink(int id) {
+        click(By.xpath("//table[@id='maintable']/tbody/tr[" + id + "]/td[8]/a/img"));
     }
 
     public void updateButton() {
@@ -38,56 +38,61 @@ public class ContactHelper extends BaseHelper {
         click(By.xpath("//input[@value='Delete']"));
     }
 
-    public void editFields(ContactData contactData, boolean creationIs) {
-        print(By.name("lastname"), contactData.getLastName());
-        print(By.name("firstname"), contactData.getFirstName());
-        print(By.name("mobile"), contactData.getMobile());
-        if (creationIs) {
-            new Select(webDriver.findElement(By.name("new_group"))).selectByValue(contactData.getGroupValue());
+    public void editFields(ContactData data, boolean creation) {
+        print(By.name("lastname"), data.getLastName());
+        print(By.name("firstname"), data.getFirstName());
+        if (creation) {
+            new Select(webDriver.findElement(By.name("new_group"))).selectByValue(data.getGroupValue());
         } else {
             Assert.assertFalse(elementPresentIs(By.name("new_group")));
         }
     }
 
-    public void creationCheck(ContactData contactData) {
-        if (!contactIs()) {
-            create(contactData);
-        }
-    }
-
-    public boolean contactIs() {
-        return elementPresentIs(By.name("selected[]"));
-    }
-
-    public List<ContactData> list() {
-        List<ContactData> contactListOfContactData = new ArrayList<ContactData>();
-        List<WebElement> contactWebElements = webDriver.findElements(By.name("selected[]"));
+    public Set<ContactData> set() {
+        Set<ContactData> set = new HashSet<>();
+        List<WebElement> webElements = webDriver.findElements(By.name("selected[]"));
         int index = 2;
-        for (WebElement contactWebElement : contactWebElements) {
-            String stringIndex = String.valueOf(index);
-            String lastName = contactWebElement.findElement(By.xpath("//table[@id='maintable']/tbody/tr[" + stringIndex + "]/td[2]")).getText();
-            String firstName = contactWebElement.findElement(By.xpath("//table[@id='maintable']/tbody/tr[" + stringIndex + "]/td[3]")).getText();
+        for (WebElement webElement : webElements) {
+            int id = Integer.parseInt(webElement.getAttribute("value"));
+            String lastName = webElement.findElement(By.xpath("//table[@id='maintable']/tbody/tr[" + index +
+                    "]/td[2]")).getText();
+            String firstName = webElement.findElement(By.xpath("//table[@id='maintable']/tbody/tr[" + index +
+                    "]/td[3]")).getText();
             index++;
-            ContactData contactData = new ContactData().withLastName(lastName).withFirstName(firstName);
-            contactListOfContactData.add(contactData);
+            ContactData data = new ContactData().withId(id).withLastName(lastName).withFirstName(firstName);
+            set.add(data);
         }
-        return contactListOfContactData;
+        return set;
     }
 
-    public void create(ContactData contactData) {
-        navigationHelper.addNewPage();
-        editFields(contactData, true);
+    public int getTr(int idExpected) {
+        List<WebElement> webElements = webDriver.findElements(By.name("selected[]"));
+        int index = 2;
+        for (WebElement webElement : webElements) {
+            int idReceived = Integer.parseInt(webElement.getAttribute("value"));
+            System.out.println(idReceived);
+            if (idReceived == idExpected) {
+                break;
+            }
+            index++;
+        }
+        return index;
+    }
+
+    public void create(ContactData data) {
+        goTo.addNewPage();
+        editFields(data, true);
         enterButton();
     }
 
-    public void modify(ContactData contactData) {
-        editImageLink();
-        editFields(contactData, false);
+    public void modify(ContactData data, int id) {
+        editImageLink(id);
+        editFields(data, false);
         updateButton();
     }
 
-    public void delete(int index) {
-        checkBox(index);
+    public void delete(ContactData data) {
+        checkBox(data.getId());
         deleteButton();
         alertAccept();
     }
