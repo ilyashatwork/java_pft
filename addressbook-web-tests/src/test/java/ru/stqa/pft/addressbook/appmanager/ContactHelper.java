@@ -40,9 +40,11 @@ public class ContactHelper extends BaseHelper {
     public void editFields(ContactData data, boolean creation) {
         print(By.name("lastname"), data.getLastName());
         print(By.name("firstname"), data.getFirstName());
+        print(By.name("address"), data.getAddress());
         print(By.name("home"), data.getHomePhone());
         print(By.name("mobile"), data.getMobilePhone());
         print(By.name("work"), data.getWorkPhone());
+        print(By.name("email"), data.getEmail());
         if (creation) {
             new Select(webDriver.findElement(By.name("new_group"))).selectByValue(data.getGroupValue());
         } else {
@@ -55,7 +57,8 @@ public class ContactHelper extends BaseHelper {
         if (all().size() == 0) {
             create(new ContactData().withLastName("Test last name #1").
                     withFirstName("Test first name #1").withHomePhone("503654").withMobilePhone("89053807510")
-                    .withWorkPhone("89063000199").withGroupValue(groups.getAnyGroupValue()));
+                    .withWorkPhone("89063000199").withGroupValue(groups.getAnyGroupValue())
+                    .withAddress("410056").withEmail("info@mail.com"));
         }
     }
 
@@ -73,10 +76,10 @@ public class ContactHelper extends BaseHelper {
             int id = Integer.parseInt(cells.get(0).findElement(By.tagName("input")).getAttribute("value"));
             String lastName = cells.get(1).getText();
             String firstName = cells.get(2).getText();
-            String[] phones = cells.get(5).getText().split("\n");
-            ContactData data = new ContactData().withId(id).withLastName(lastName).withFirstName(firstName)
-                    .withHomePhone(phones[0]).withMobilePhone(phones[1]).withWorkPhone(phones[2]);
-            contactsCache.add(data);
+            String allPhones = cells.get(5).getText();
+            //String[] phones = cells.get(5).getText().split("\n");
+            contactsCache.add(new ContactData().withId(id).withLastName(lastName).withFirstName(firstName)
+                    .withAllPhones(allPhones));
         }
         return new Contacts(contactsCache);
     }

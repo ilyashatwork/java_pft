@@ -21,9 +21,10 @@ public class ContactModificationTests extends BaseTests {
     public void testContactModification() {
         Contacts before = app.contacts().all();
         ContactData oldData = before.iterator().next();
-        ContactData newData = new ContactData().withId(oldData.getId()).withLastName("Test last name #2").withFirstName("Test first name #2")
-                .withHomePhone("111111").withMobilePhone("89057777777").withWorkPhone("89068888888")
-                .withGroupValue(app.groups().getAnyGroupValue());
+        ContactData newData = new ContactData().withId(oldData.getId()).withLastName("Test last name #2")
+                .withFirstName("Test first name #2").withHomePhone("111111").withMobilePhone("89057777777")
+                .withWorkPhone("89068888888").withGroupValue(app.groups().getAnyGroupValue()).withAddress("410057")
+                .withEmail("support@mail.com");
         app.contacts().modify(newData, oldData.getId());
         assertThat(app.contacts().count(), equalTo(before.size()));
         Contacts after = app.contacts().all();
