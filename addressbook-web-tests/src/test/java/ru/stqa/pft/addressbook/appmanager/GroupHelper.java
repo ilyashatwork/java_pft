@@ -1,20 +1,21 @@
 package ru.stqa.pft.addressbook.appmanager;
 
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
+import ru.stqa.pft.addressbook.model.Groups;
 import ru.stqa.pft.addressbook.model.GroupData;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 public class GroupHelper extends BaseHelper {
 
     public GroupHelper(WebDriver webDriver) {
         super(webDriver);
     }
+
+    NavigationHelper goTo = new NavigationHelper(webDriver);
 
     public void newGroupButton() {
         click(By.name("new"));
@@ -24,7 +25,9 @@ public class GroupHelper extends BaseHelper {
         click(By.name("submit"));
     }
 
-    public void checkBox(int id) { webDriver.findElement(By.cssSelector("input[value='" + id + "']")).click(); }
+    public void checkBox(int id) {
+        webDriver.findElement(By.cssSelector("input[value='" + id + "']")).click();
+    }
 
     public void editGroupButton() {
         click(By.name("edit"));
@@ -42,33 +45,52 @@ public class GroupHelper extends BaseHelper {
         print(By.name("group_name"), data.getName());
     }
 
-    public Set<GroupData> set() {
-        Set<GroupData> set = new HashSet<>();
+    public void creationCheck() {
+        goTo.groupPage();
+        if (all().size() == 0) {
+            create(new GroupData().withName("Test group name #1"));
+        }
+    }
+
+    public Groups all() {
+        goTo.groupPage();
+        Groups groups = new Groups();
         List<WebElement> webElements = webDriver.findElements(By.cssSelector("span.group"));
         for (WebElement webElement : webElements) {
             int id = Integer.parseInt(webElement.findElement(By.tagName("input")).getAttribute("value"));
             String name = webElement.getText();
             GroupData data = new GroupData().withId(id).withName(name);
-            set.add(data);
+            groups.add(data);
         }
-        return set;
+        return groups;
+    }
+
+    public String getAnyGroupValue() {
+        goTo.groupPage();
+        return Integer.toString(all().iterator().next().getId());
     }
 
     public void create(GroupData data) {
+        goTo.groupPage();
         newGroupButton();
         editFields(data);
         enterInformationButton();
+        goTo.groupPage();
     }
 
     public void modify(GroupData data) {
+        goTo.groupPage();
         checkBox(data.getId());
         editGroupButton();
         editFields(data);
         updateButton();
+        goTo.groupPage();
     }
 
     public void delete(GroupData data) {
+        goTo.groupPage();
         checkBox(data.getId());
         deleteButton();
+        goTo.groupPage();
     }
 }

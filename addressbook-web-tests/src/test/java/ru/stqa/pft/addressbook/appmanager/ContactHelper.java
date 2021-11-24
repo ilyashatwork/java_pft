@@ -1,16 +1,16 @@
 package ru.stqa.pft.addressbook.appmanager;
 
+import java.util.List;
+
+import org.testng.Assert;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
-import org.testng.Assert;
 
+import ru.stqa.pft.addressbook.model.Contacts;
 import ru.stqa.pft.addressbook.model.ContactData;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 public class ContactHelper extends BaseHelper {
 
@@ -19,12 +19,15 @@ public class ContactHelper extends BaseHelper {
     }
 
     NavigationHelper goTo = new NavigationHelper(webDriver);
+    GroupHelper groups = new GroupHelper(webDriver);
 
     public void enterButton() {
         click(By.name("submit"));
     }
 
-    public void checkBox(int id){ webDriver.findElement(By.cssSelector("input[value='" + id + "']")).click(); }
+    public void checkBox(int id) {
+        webDriver.findElement(By.cssSelector("input[value='" + id + "']")).click();
+    }
 
     public void editImageLink(int id) {
         click(By.xpath("//table[@id='maintable']/tbody/tr[" + id + "]/td[8]/a/img"));
@@ -48,8 +51,17 @@ public class ContactHelper extends BaseHelper {
         }
     }
 
-    public Set<ContactData> set() {
-        Set<ContactData> set = new HashSet<>();
+    public void creationCheck() {
+        goTo.homePage();
+        if (all().size() == 0) {
+            create(new ContactData().withLastName("Test last name #1").
+                    withFirstName("Test first name #1").withGroupValue(groups.getAnyGroupValue()));
+        }
+    }
+
+    public Contacts all() {
+        goTo.homePage();
+        Contacts contacts = new Contacts();
         List<WebElement> webElements = webDriver.findElements(By.name("selected[]"));
         int index = 2;
         for (WebElement webElement : webElements) {
@@ -60,17 +72,16 @@ public class ContactHelper extends BaseHelper {
                     "]/td[3]")).getText();
             index++;
             ContactData data = new ContactData().withId(id).withLastName(lastName).withFirstName(firstName);
-            set.add(data);
+            contacts.add(data);
         }
-        return set;
+        return contacts;
     }
 
-    public int getTr(int idExpected) {
+    public int getTableRow(int idExpected) {
         List<WebElement> webElements = webDriver.findElements(By.name("selected[]"));
         int index = 2;
         for (WebElement webElement : webElements) {
             int idReceived = Integer.parseInt(webElement.getAttribute("value"));
-            System.out.println(idReceived);
             if (idReceived == idExpected) {
                 break;
             }
@@ -83,18 +94,23 @@ public class ContactHelper extends BaseHelper {
         goTo.addNewPage();
         editFields(data, true);
         enterButton();
+        goTo.homePage();
     }
 
     public void modify(ContactData data, int id) {
+        goTo.homePage();
         editImageLink(id);
         editFields(data, false);
         updateButton();
+        goTo.homePage();
     }
 
     public void delete(ContactData data) {
+        goTo.homePage();
         checkBox(data.getId());
         deleteButton();
         alertAccept();
+        goTo.homePage();
     }
 
 }

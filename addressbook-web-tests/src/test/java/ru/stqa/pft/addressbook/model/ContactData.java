@@ -8,7 +8,9 @@ public class ContactData {
     private String firstName;
     private String groupValue;
 
-    public int getId() { return id; }
+    public int getId() {
+        return id;
+    }
 
     public String getLastName() {
         return lastName;
@@ -18,7 +20,9 @@ public class ContactData {
         return firstName;
     }
 
-    public String getGroupValue() { return groupValue; }
+    public String getGroupValue() {
+        return groupValue;
+    }
 
     public ContactData withId(int id) {
         this.id = id;
