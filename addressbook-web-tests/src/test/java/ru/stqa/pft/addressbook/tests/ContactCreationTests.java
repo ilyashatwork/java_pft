@@ -22,9 +22,8 @@ public class ContactCreationTests extends BaseTests {
         ContactData newC = new ContactData().withLastName("Test last name #1").withFirstName("Test first name #1")
                 .withGroupValue(app.groups().getAnyGroupValue());
         app.contacts().create(newC);
+        assertThat(app.contacts().count(), equalTo(before.size() + 1));
         Contacts after = app.contacts().all();
-
-        assertThat(after.size(), equalTo(before.size() + 1));
         assertThat(after, equalTo(
                 before.withAdded(newC.withId(after.stream().mapToInt((c) -> c.getId()).max().getAsInt()))));
     }

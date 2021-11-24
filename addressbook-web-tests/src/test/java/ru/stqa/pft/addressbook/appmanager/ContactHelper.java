@@ -11,6 +11,7 @@ import org.openqa.selenium.support.ui.Select;
 
 import ru.stqa.pft.addressbook.model.Contacts;
 import ru.stqa.pft.addressbook.model.ContactData;
+import ru.stqa.pft.addressbook.model.Groups;
 
 public class ContactHelper extends BaseHelper {
 
@@ -59,9 +60,14 @@ public class ContactHelper extends BaseHelper {
         }
     }
 
+    public Contacts contactsCache = null;
+
     public Contacts all() {
         goTo.homePage();
-        Contacts contacts = new Contacts();
+        if (contactsCache != null) {
+            return new Contacts(contactsCache);
+        }
+        contactsCache = new Contacts();
         List<WebElement> webElements = webDriver.findElements(By.name("selected[]"));
         int index = 2;
         for (WebElement webElement : webElements) {
@@ -72,9 +78,9 @@ public class ContactHelper extends BaseHelper {
                     "]/td[3]")).getText();
             index++;
             ContactData data = new ContactData().withId(id).withLastName(lastName).withFirstName(firstName);
-            contacts.add(data);
+            contactsCache.add(data);
         }
-        return contacts;
+        return new Contacts(contactsCache);
     }
 
     public int getTableRow(int idExpected) {
@@ -90,10 +96,15 @@ public class ContactHelper extends BaseHelper {
         return index;
     }
 
+    public int count() {
+        return webDriver.findElements(By.name("selected[]")).size();
+    }
+
     public void create(ContactData data) {
         goTo.addNewPage();
         editFields(data, true);
         enterButton();
+        contactsCache = null;
         goTo.homePage();
     }
 
@@ -102,6 +113,7 @@ public class ContactHelper extends BaseHelper {
         editImageLink(id);
         editFields(data, false);
         updateButton();
+        contactsCache = null;
         goTo.homePage();
     }
 
@@ -110,6 +122,7 @@ public class ContactHelper extends BaseHelper {
         checkBox(data.getId());
         deleteButton();
         alertAccept();
+        contactsCache = null;
         goTo.homePage();
     }
 
