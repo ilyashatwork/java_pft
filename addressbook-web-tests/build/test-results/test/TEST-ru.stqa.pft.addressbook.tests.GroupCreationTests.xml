@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="ru.stqa.pft.addressbook.tests.GroupCreationTests" tests="2" skipped="0" failures="0" errors="0" timestamp="2021-11-24T15:01:08" hostname="ИЛЬЯ-ПК" time="3.561">
+<testsuite name="ru.stqa.pft.addressbook.tests.GroupCreationTests" tests="2" skipped="0" failures="0" errors="0" timestamp="2021-11-24T20:29:27" hostname="ИЛЬЯ-ПК" time="3.139">
   <properties/>
-  <testcase name="testGroupCorrectCreation" classname="ru.stqa.pft.addressbook.tests.GroupCreationTests" time="1.843"/>
-  <testcase name="testGroupIncorrectCreation" classname="ru.stqa.pft.addressbook.tests.GroupCreationTests" time="1.717"/>
+  <testcase name="testGroupCorrectCreation" classname="ru.stqa.pft.addressbook.tests.GroupCreationTests" time="1.647"/>
+  <testcase name="testGroupIncorrectCreation" classname="ru.stqa.pft.addressbook.tests.GroupCreationTests" time="1.491"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
